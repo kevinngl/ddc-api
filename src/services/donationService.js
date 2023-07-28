@@ -66,6 +66,7 @@ const createDonation = async (payload, user) => {
       donatorId: payload.donatorId,
       campaignId: payload.campaignId,
       comment: payload.comment,
+      showName: payload.showName,
       createdBy: 'system',
     };
 

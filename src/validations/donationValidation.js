@@ -5,6 +5,7 @@ const createDonation = function () {
     donatorId: Joi.number().required(),
     campaignId: Joi.number().required(),
     amount: Joi.number().required(),
+    showName: Joi.string().required(),
     comment: Joi.string().allow(null),
   });
 };

@@ -26,7 +26,7 @@ module.exports = (sequelize, DataTypes) => {
       },
       donationTarget: {
         type: DataTypes.DOUBLE,
-        allowNull: false,
+        allowNull: true,
       },
       donationAchieved: {
         type: DataTypes.DOUBLE,

@@ -15,6 +15,10 @@ module.exports = (sequelize, DataTypes) => {
         type: DataTypes.INTEGER,
         allowNull: false,
       },
+      showName: {
+        type: DataTypes.CHAR,
+        allowNull: false,
+      },
       comment: {
         type: DataTypes.TEXT,
         allowNull: true,
