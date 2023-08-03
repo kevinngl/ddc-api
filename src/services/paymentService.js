@@ -15,6 +15,7 @@ const recievePayment = async (payload) => {
     const isValid = await _validatePayment({
       parsedOrderId,
       orderId: payload.order_id,
+      amount: payload.gross_amount,
       signatureKey: payload.signature_key,
       statusCode: payload.status_code,
     });
@@ -71,10 +72,9 @@ const _validatePayment = async (payload) => {
   const payment = await paymentRepository.getByOrderId(payload.parsedOrderId);
 
   if (payment) {
-    const { amount } = payment;
     const { serverKey } = config.midtrans;
 
-    const key = await generateSignatureKey(payload.orderId, payload.statusCode, amount, serverKey);
+    const key = await generateSignatureKey(payload.orderId, payload.statusCode, payload.amount, serverKey);
 
     if (key === payload.signatureKey) {
       return true;
