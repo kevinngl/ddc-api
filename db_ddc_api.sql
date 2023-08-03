@@ -11,7 +11,7 @@
  Target Server Version : 50733
  File Encoding         : 65001
 
- Date: 29/07/2023 11:56:51
+ Date: 01/08/2023 19:31:23
 */
 
 SET NAMES utf8mb4;
@@ -203,7 +203,7 @@ CREATE TABLE `donation`  (
   `deleted_at` datetime NULL DEFAULT NULL,
   `deleted_by` char(30) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL,
   PRIMARY KEY (`id`) USING BTREE
-) ENGINE = InnoDB AUTO_INCREMENT = 73 CHARACTER SET = utf8 COLLATE = utf8_general_ci ROW_FORMAT = DYNAMIC;
+) ENGINE = InnoDB AUTO_INCREMENT = 77 CHARACTER SET = utf8 COLLATE = utf8_general_ci ROW_FORMAT = DYNAMIC;
 
 -- ----------------------------
 -- Records of donation
@@ -224,6 +224,10 @@ INSERT INTO `donation` VALUES (69, 28, 49, 'ya', 'test', '2023-07-27 18:17:56', 
 INSERT INTO `donation` VALUES (70, 28, 49, 'ya', 'test', '2023-07-27 19:28:32', 'system', '2023-07-27 19:28:32', NULL, NULL, NULL);
 INSERT INTO `donation` VALUES (71, 41, 51, 'ya', 'test', '2023-07-28 14:11:13', 'system', '2023-07-28 14:11:13', NULL, NULL, NULL);
 INSERT INTO `donation` VALUES (72, 41, 51, 'tidak', 'test', '2023-07-28 14:11:44', 'system', '2023-07-28 14:11:44', NULL, NULL, NULL);
+INSERT INTO `donation` VALUES (73, 41, 50, 'ya', 'test', '2023-08-01 16:40:41', 'system', '2023-08-01 16:40:41', NULL, NULL, NULL);
+INSERT INTO `donation` VALUES (74, 41, 49, 'ya', 'bagus', '2023-08-01 17:30:39', 'system', '2023-08-01 17:30:39', NULL, NULL, NULL);
+INSERT INTO `donation` VALUES (75, 41, 49, 'tidak', 'test', '2023-08-01 19:20:18', 'system', '2023-08-01 19:20:18', NULL, NULL, NULL);
+INSERT INTO `donation` VALUES (76, 41, 49, 'tidak', 'test', '2023-08-01 19:21:11', 'system', '2023-08-01 19:21:11', NULL, NULL, NULL);
 
 -- ----------------------------
 -- Table structure for payment
@@ -248,7 +252,7 @@ CREATE TABLE `payment`  (
   `deleted_by` char(30) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL,
   `transaction_time` datetime NULL DEFAULT NULL,
   PRIMARY KEY (`id`) USING BTREE
-) ENGINE = InnoDB AUTO_INCREMENT = 65 CHARACTER SET = utf8 COLLATE = utf8_general_ci ROW_FORMAT = DYNAMIC;
+) ENGINE = InnoDB AUTO_INCREMENT = 69 CHARACTER SET = utf8 COLLATE = utf8_general_ci ROW_FORMAT = DYNAMIC;
 
 -- ----------------------------
 -- Records of payment
@@ -269,6 +273,30 @@ INSERT INTO `payment` VALUES (61, 69, '50d99d20-1f33-4b17-a4a3-3b328cf809c9', NU
 INSERT INTO `payment` VALUES (62, 70, '7f2046f2-604c-4541-a09f-9aa58d672a1c', NULL, 'https://app.sandbox.midtrans.com/payment-links/a20b3ff8-9910-4db5-b47e-8fa2c50b95e0', 'digital', '2023-07-27 19:58:32', NULL, 'pending', 10000, '2023-07-27 19:28:32', 'system', '2023-07-27 19:28:32', NULL, NULL, NULL, NULL);
 INSERT INTO `payment` VALUES (63, 71, '85ea6a95-3fd9-4d82-9a71-65ebdf027054', NULL, 'https://app.sandbox.midtrans.com/payment-links/8b3f660d-1f51-4d91-a14c-2d5ea3245e37', 'digital', '2023-07-28 14:41:13', NULL, 'pending', 10000, '2023-07-28 14:11:13', 'system', '2023-07-28 14:11:13', NULL, NULL, NULL, NULL);
 INSERT INTO `payment` VALUES (64, 72, '71882acc-d016-4905-9706-0441dab13e59', NULL, 'https://app.sandbox.midtrans.com/payment-links/97743f99-56fd-44fe-a5eb-0c26a378209f', 'digital', '2023-07-28 14:41:44', NULL, 'pending', 10900, '2023-07-28 14:11:44', 'system', '2023-07-28 14:11:44', NULL, NULL, NULL, NULL);
+INSERT INTO `payment` VALUES (65, 73, '59efe95c-3bd0-4dec-a2af-6c14aa282243', NULL, 'https://app.midtrans.com/payment-links/d9a7c526-757b-4100-ac1e-db564838245b', 'digital', '2023-08-01 17:10:41', NULL, 'pending', 100000, '2023-08-01 16:40:41', 'system', '2023-08-01 16:40:41', NULL, NULL, NULL, NULL);
+INSERT INTO `payment` VALUES (66, 74, '837dbec6-257a-4057-b54b-2b4599c1fc8f', NULL, 'https://app.sandbox.midtrans.com/payment-links/e0d62372-ee5f-45f4-a79f-733133d39a74', 'digital', '2023-08-01 18:00:39', NULL, 'pending', 50000, '2023-08-01 17:30:39', 'system', '2023-08-01 17:30:39', NULL, NULL, NULL, NULL);
+INSERT INTO `payment` VALUES (67, 75, '2d36fb53-c878-405c-b9c1-4f43da6c7646', NULL, 'https://app.midtrans.com/payment-links/d448f934-81fc-44e3-af6e-0125a1e6b130', 'digital', '2023-08-01 19:50:18', NULL, 'pending', 10000, '2023-08-01 19:20:18', 'system', '2023-08-01 19:20:18', NULL, NULL, NULL, NULL);
+INSERT INTO `payment` VALUES (68, 76, '1294b69d-f16c-42e7-a8b1-f38c0f2e93bd', NULL, 'https://app.midtrans.com/payment-links/fe44a45a-2b1a-4b2d-a9f8-67da593e8591', 'digital', '2023-08-01 19:51:11', NULL, 'pending', 10000, '2023-08-01 19:21:11', 'system', '2023-08-01 19:21:11', NULL, NULL, NULL, NULL);
+
+-- ----------------------------
+-- Table structure for payment_logs
+-- ----------------------------
+DROP TABLE IF EXISTS `payment_logs`;
+CREATE TABLE `payment_logs`  (
+  `id` int(11) NOT NULL,
+  `json_body` varchar(255) CHARACTER SET latin1 COLLATE latin1_swedish_ci NULL DEFAULT NULL,
+  `created_at` varchar(255) CHARACTER SET latin1 COLLATE latin1_swedish_ci NULL DEFAULT NULL,
+  `created_by` varchar(255) CHARACTER SET latin1 COLLATE latin1_swedish_ci NULL DEFAULT NULL,
+  `updated_at` datetime NULL DEFAULT NULL,
+  `updated_by` varchar(255) CHARACTER SET latin1 COLLATE latin1_swedish_ci NULL DEFAULT NULL,
+  `deleted_at` datetime NULL DEFAULT NULL,
+  `deleted_by` varchar(255) CHARACTER SET latin1 COLLATE latin1_swedish_ci NULL DEFAULT NULL,
+  PRIMARY KEY (`id`) USING BTREE
+) ENGINE = InnoDB CHARACTER SET = latin1 COLLATE = latin1_swedish_ci ROW_FORMAT = Dynamic;
+
+-- ----------------------------
+-- Records of payment_logs
+-- ----------------------------
 
 -- ----------------------------
 -- Table structure for roles

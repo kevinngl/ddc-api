@@ -2,6 +2,7 @@ const moment = require('moment/moment');
 const config = require('../config/config');
 const { sequelize } = require('../models');
 const paymentRepository = require('../repositories/paymentRepository');
+const paymentLogsRepository = require('../repositories/paymentLogsRepository');
 const campaignRepository = require('../repositories/campaignRepository');
 const donationRepository = require('../repositories/donationRepository');
 const { generateSignatureKey } = require('../utils/midtrans');
@@ -24,34 +25,37 @@ const recievePayment = async (payload) => {
 
     const payment = await paymentRepository.getByOrderId(parsedOrderId);
     if (payment) {
-      await paymentRepository.updatePaymentStatus(
-        {
-          paymentStatus: payload.transaction_status,
-          orderId: payload.order_id,
-          transactionId: payload.transaction_id,
-          transactionTime: moment(payload.transaction_time).format('YYYY-MM-DD HH:mm:ss'),
-          updatedBy: 'system',
-        },
-        { orderId: parsedOrderId },
-        trx
-      );
+      const paymentUpdate = {
+        paymentStatus: payload.transaction_status,
+        orderId: payload.order_id,
+        transactionId: payload.transaction_id || null,
+        transactionTime: moment(payload.transaction_time).format('YYYY-MM-DD HH:mm:ss') || null,
+        updatedBy: 'system',
+      };
 
-      const donation = await donationRepository.findOne({ orderId: parsedOrderId });
-      if (donation) {
-        const campaign = await campaignRepository.findCampaignById(donation.campaignId);
+      await paymentRepository.updatePaymentStatus(paymentUpdate, { orderId: parsedOrderId }, trx);
 
-        if (!campaign) {
-          throw new Error('Campaign not found');
+      // logs payment status
+      await paymentLogsRepository.create({ jsonBody: JSON.stringify(payload) }, trx);
+
+      if (payload.transaction_status === 'settlement') {
+        const donation = await donationRepository.findOne({ orderId: parsedOrderId });
+        if (donation) {
+          const campaign = await campaignRepository.findCampaignById(donation.campaignId);
+
+          if (!campaign) {
+            throw new Error('Campaign not found');
+          }
+
+          await campaignRepository.updateCampaign(
+            donation.campaignId,
+            {
+              donationAchieved: payment.amount + campaign.donationAchieved,
+              updatedBy: 'system',
+            },
+            trx
+          );
         }
-
-        await campaignRepository.updateCampaign(
-          donation.campaignId,
-          {
-            donationAchieved: payment.amount + campaign.donationAchieved,
-            updatedBy: 'system',
-          },
-          trx
-        );
       }
     }
     trx.commit();
