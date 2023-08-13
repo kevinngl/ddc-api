@@ -36,7 +36,7 @@ exports.findAllDonation = (where, opt = {}) => {
  */
 exports.findOne = (where, opt) => {
   return Models.DonationModel.findOne({
-    ...where,
+    where,
     include: [
       // {
       //   model: Models.CampaignModel,
@@ -51,6 +51,7 @@ exports.findOne = (where, opt) => {
         as: 'payment',
       },
     ],
+    logging: console.log,
     ...opt,
   });
 };

@@ -12,35 +12,35 @@ const recievePayment = async (payload) => {
   try {
     const parsedOrderId = payload.order_id.split('-').slice(0, -1).join('-');
 
-    const isValid = await _validatePayment({
-      parsedOrderId,
-      orderId: payload.order_id,
-      amount: payload.gross_amount,
-      signatureKey: payload.signature_key,
-      statusCode: payload.status_code,
-    });
-
-    if (!isValid) {
-      throw new Error('Invalid payment');
-    }
-
-    const payment = await paymentRepository.getByOrderId(parsedOrderId);
-    if (payment) {
-      const paymentUpdate = {
-        paymentStatus: payload.transaction_status,
+    if (payload.transaction_status === 'settlement') {
+      const isValid = await _validatePayment({
+        parsedOrderId,
         orderId: payload.order_id,
-        transactionId: payload.transaction_id || null,
-        transactionTime: moment(payload.transaction_time).format('YYYY-MM-DD HH:mm:ss') || null,
-        updatedBy: 'system',
-      };
+        amount: payload.gross_amount,
+        signatureKey: payload.signature_key,
+        statusCode: payload.status_code,
+      });
 
-      await paymentRepository.updatePaymentStatus(paymentUpdate, { orderId: parsedOrderId }, trx);
+      if (!isValid) {
+        throw new Error('Invalid payment');
+      }
 
-      // logs payment status
-      await paymentLogsRepository.create({ jsonBody: JSON.stringify(payload) }, trx);
+      const payment = await paymentRepository.getByOrderId(parsedOrderId);
+      if (payment) {
+        const paymentUpdate = {
+          paymentStatus: payload.transaction_status,
+          orderId: payload.order_id,
+          transactionId: payload.transaction_id || null,
+          transactionTime: moment(payload.transaction_time).format('YYYY-MM-DD HH:mm:ss') || null,
+          updatedBy: 'system',
+        };
 
-      if (payload.transaction_status === 'settlement') {
-        const donation = await donationRepository.findOne({ orderId: parsedOrderId });
+        await paymentRepository.updatePaymentStatus(paymentUpdate, { orderId: parsedOrderId }, trx);
+
+        // logs payment status
+        await paymentLogsRepository.create({ jsonBody: JSON.stringify(payload) }, trx);
+
+        const donation = await donationRepository.findOne({ id: payment.donationId });
         if (donation) {
           const campaign = await campaignRepository.findCampaignById(donation.campaignId);
 
@@ -51,7 +51,8 @@ const recievePayment = async (payload) => {
           await campaignRepository.updateCampaign(
             donation.campaignId,
             {
-              donationAchieved: payment.amount + campaign.donationAchieved,
+              donationAchieved:
+                campaign.donationAchieved === null ? payment.amount : payment.amount + campaign.donationAchieved,
               updatedBy: 'system',
             },
             trx
@@ -59,11 +60,11 @@ const recievePayment = async (payload) => {
         }
       }
     }
-    trx.commit();
+    await trx.commit();
     return;
   } catch (error) {
     console.log(error);
-    trx.rollback();
+    await trx.rollback();
     throw error;
   }
 };
